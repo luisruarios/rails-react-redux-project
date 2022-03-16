@@ -1,18 +1,31 @@
-import { createStore } from "redux";
+import { applyMiddleware, createStore } from "redux";
+import thunk from "redux-thunk";
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
 const initialState = {
-    things: []
+    things: [
+        {
+            name: "test",
+            guid: "123"
+        }
+    ]
 }
 
-function rootReducer(state, action){
+function rootReducer(state, action) {
     console.log(action.type)
     switch (action.type) {
-        default:
-            return state;
+        case "GET_THINGS_SUCCESS":
+        return { things: action.json.things}
     }
+    return state
 }
 
-export default function configureStore(){
-    const store = createStore(rootReducer, initialState)
+export default function configureStore() {
+    const store = createStore(
+        rootReducer, 
+        initialState,
+        composeEnhancers(applyMiddleware(thunk))
+        
+        )
     return store
 }
